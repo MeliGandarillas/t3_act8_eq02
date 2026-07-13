@@ -1,0 +1,260 @@
+.filters-container {
+  width: 100%;
+  margin-bottom: 34px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 18px 20px;
+  border: none;
+  outline: none;
+  background: #61714d;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.search-input::placeholder {
+  color: #d3dbc5;
+}
+
+.select-filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(250px, 1fr));
+  gap: 30px;
+  margin-top: 24px;
+}
+
+.filter-select {
+  width: 100%;
+  padding: 18px 20px;
+  border: none;
+  outline: none;
+  background: #61714d;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.filter-select option {
+  background: #ffffff;
+  color: #222222;
+}
+
+@media (max-width: 850px) {
+  .select-filters {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .search-input,
+  .filter-select {
+    font-size: 16px;
+  }
+}
+
+.data-page {
+  width: 100%;
+}
+
+.data-title {
+  margin: 0 0 24px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 42px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 10px;
+}
+
+.data-table {
+  width: 100%;
+  min-width: 1050px;
+  border-collapse: separate;
+  border-spacing: 0 14px;
+}
+
+.data-table thead {
+  background: #efd7aa;
+}
+
+.data-table th {
+  padding: 18px 14px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.data-table th:first-child {
+  border-radius: 8px 0 0 8px;
+}
+
+.data-table th:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+.data-table td {
+  padding: 10px 14px;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.data-table tbody tr {
+  background: transparent;
+}
+
+.id-cell {
+  color: #994b46;
+  font-weight: 600;
+}
+
+.table-chip {
+  display: inline-block;
+  padding: 10px 12px;
+  background: #f2d6bd;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.rating-cell {
+  color: var(--color-accent);
+  font-size: 17px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.edit-button,
+.delete-button {
+  border: none;
+  background: transparent;
+  padding: 5px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.edit-button {
+  color: var(--color-text);
+}
+
+.delete-button {
+  color: var(--color-danger);
+}
+
+.edit-button:hover,
+.delete-button:hover {
+  transform: scale(1.1);
+}
+
+.loading-message,
+.empty-message {
+  padding: 30px;
+  text-align: center;
+  font-size: 18px;
+  color: var(--color-brown);
+}
+
+.error-message {
+  padding: 14px 18px;
+  color: var(--color-danger);
+  background: #f8d7da;
+  border-radius: 8px;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin-top: 28px;
+  padding-bottom: 30px;
+}
+
+.pagination-navigation {
+  display: flex;
+  overflow: hidden;
+  background: #2f2f2f;
+  border-radius: 12px;
+}
+
+.pagination-arrow {
+  min-width: 55px;
+  padding: 14px 18px;
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.pagination-arrow:first-child {
+  border-right: 1px solid #555555;
+}
+
+.pagination-arrow:disabled {
+  color: #888888;
+  cursor: not-allowed;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.pagination-limit {
+  padding: 12px 18px;
+  border: none;
+  outline: none;
+  background: #61714d;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pagination-pages {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.page-button {
+  min-width: 45px;
+  padding: 11px;
+  border: none;
+  border-radius: 7px;
+  background: #e4e4e4;
+  color: #61714d;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.page-button.active {
+  background: #dfa166;
+  color: #ffffff;
+}
+
+@media (max-width: 700px) {
+  .pagination-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pagination-navigation,
+  .pagination-controls {
+    justify-content: center;
+  }
+}
