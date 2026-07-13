@@ -1,5 +1,6 @@
-import React from 'react';
-import '../styles/loading.css';
+function Loading({ mensaje = "Cargando talleres..." }) {
+  return <p className="loading-message">{mensaje}</p>;
+}
 
 const Loading = ({ mensaje = "Cargando experiencias artesanales..." }) => {
   return (
