@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import DataFilters from "../components/DataFilters";
 import DataTable from "../components/DataTable";
 import Loading from "../components/Loading";
 import { getTalleres } from "../services/api";
@@ -13,6 +14,10 @@ function DataPage({ usuarioActivo, onLogout }) {
   const [talleres, setTalleres] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
+
+  const [busqueda, setBusqueda] = useState("");
+  const [especialidad, setEspecialidad] = useState("");
+  const [ubicacion, setUbicacion] = useState("");
 
   useEffect(() => {
     async function cargarTalleres() {
@@ -32,6 +37,55 @@ function DataPage({ usuarioActivo, onLogout }) {
     cargarTalleres();
   }, []);
 
+  const especialidades = useMemo(() => {
+    return [
+      ...new Set(
+        talleres
+          .map((taller) => taller.especialidad)
+          .filter(Boolean)
+      ),
+    ].sort();
+  }, [talleres]);
+
+  const ubicaciones = useMemo(() => {
+    return [
+      ...new Set(
+        talleres
+          .map((taller) => taller.ubicacion)
+          .filter(Boolean)
+      ),
+    ].sort();
+  }, [talleres]);
+
+  const talleresFiltrados = useMemo(() => {
+    const textoBusqueda = busqueda.trim().toLowerCase();
+
+    return talleres.filter((taller) => {
+      const coincideBusqueda =
+        textoBusqueda === "" ||
+        taller.nombreTaller
+          ?.toLowerCase()
+          .includes(textoBusqueda) ||
+        taller.responsable
+          ?.toLowerCase()
+          .includes(textoBusqueda);
+
+      const coincideEspecialidad =
+        especialidad === "" ||
+        taller.especialidad === especialidad;
+
+      const coincideUbicacion =
+        ubicacion === "" ||
+        taller.ubicacion === ubicacion;
+
+      return (
+        coincideBusqueda &&
+        coincideEspecialidad &&
+        coincideUbicacion
+      );
+    });
+  }, [talleres, busqueda, especialidad, ubicacion]);
+
   return (
     <div>
       <Navbar
@@ -45,15 +99,20 @@ function DataPage({ usuarioActivo, onLogout }) {
           onCambiarOpcion={setOpcionActiva}
         />
 
-        <div className="app-content">
+        <main className="app-content">
           {opcionActiva === "panel" && (
-            <h1>¡Bienvenido!</h1>
+            <section>
+              <h1>¡Bienvenido!</h1>
+              <p>Selecciona una opción del menú lateral.</p>
+            </section>
           )}
 
           {opcionActiva === "artesanos" && (
             <section>
               <h1>Artesanos registrados</h1>
-              <p>Aquí irá la información de los artesanos.</p>
+              <p>
+                Aquí irá la información de los artesanos.
+              </p>
             </section>
           )}
 
@@ -63,26 +122,45 @@ function DataPage({ usuarioActivo, onLogout }) {
                 Talleres artesanos registrados.
               </h1>
 
+              <DataFilters
+                busqueda={busqueda}
+                onCambiarBusqueda={setBusqueda}
+                especialidad={especialidad}
+                onCambiarEspecialidad={setEspecialidad}
+                ubicacion={ubicacion}
+                onCambiarUbicacion={setUbicacion}
+                especialidades={especialidades}
+                ubicaciones={ubicaciones}
+              />
+
               {cargando && <Loading />}
 
               {!cargando && error && (
-                <p className="error-message">{error}</p>
+                <p className="error-message">
+                  {error}
+                </p>
               )}
 
               {!cargando && !error && (
-                <DataTable talleres={talleres} />
+                <DataTable
+                  talleres={talleresFiltrados}
+                />
               )}
             </section>
           )}
 
           {opcionActiva === "resenas" && (
-            <h1>Reseñas</h1>
+            <section>
+              <h1>Reseñas</h1>
+            </section>
           )}
 
           {opcionActiva === "ajustes" && (
-            <h1>Ajustes</h1>
+            <section>
+              <h1>Ajustes</h1>
+            </section>
           )}
-        </div>
+        </main>
       </div>
     </div>
   );
