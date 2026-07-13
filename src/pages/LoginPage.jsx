@@ -38,16 +38,16 @@ function LoginPage({ onLoginSuccess }) {
           <p className="login-subtitle">Conecta con artesanos y sus talleres</p>
         </div>
 
-        <label className="login-label">Correo electrónico</label>
+        <label className="login-label">Nombre de usuario:</label>
         <input
           type="text"
           className="login-input"
-          placeholder="tú@correo.com"
+          placeholder="Usuario"
           value={username}
           onChange={(event) => setUsername(event.target.value)}
         />
 
-        <label className="login-label">Contraseña</label>
+        <label className="login-label">Contraseña:</label>
         <input
           type="password"
           className="login-input"
