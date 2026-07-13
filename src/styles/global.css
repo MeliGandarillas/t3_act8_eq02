@@ -1,0 +1,22 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+:root {
+  --color-bg: #F8F0E3;
+  --color-sidebar: #F0D9A6;
+  --color-surface: #FFFFFF;
+  --color-brown: #5B3A22;
+  --color-brown-light: #6B4226;
+  --color-accent: #D9752B;
+  --color-danger: #A93226;
+  --color-text: #2E2019;
+  --color-border: #E4D5BE;
+}
