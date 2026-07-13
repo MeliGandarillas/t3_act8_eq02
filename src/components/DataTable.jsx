@@ -23,62 +23,55 @@ function DataTable({ talleres, onEdit, onDelete }) {
         </thead>
 
         <tbody>
-          {talleres.map((taller) => {
-            const calificacion = Number(taller.resenia);
+          {talleres.map((taller) => (
+            <tr key={taller.id}>
+              <td className="id-cell">
+                {String(taller.id).padStart(3, "0")}
+              </td>
 
-            return (
-              <tr key={taller.id}>
-                <td className="id-cell">
-                  {String(taller.id).padStart(3, "0")}
-                </td>
+              <td>
+                <span className="table-chip">
+                  {taller.nombreTaller}
+                </span>
+              </td>
 
-                <td>
-                  <span className="table-chip">
-                    {taller.nombreTaller}
-                  </span>
-                </td>
+              <td>{taller.responsable}</td>
 
-                <td>{taller.responsable}</td>
+              <td>
+                <span className="table-chip">
+                  {taller.especialidad}
+                </span>
+              </td>
 
-                <td>
-                  <span className="table-chip">
-                    {taller.especialidad}
-                  </span>
-                </td>
+              <td>{taller.ubicacion}</td>
 
-                <td>{taller.ubicacion}</td>
+              <td className="rating-cell">
+                ★ {Number(taller.resenia).toFixed(1)}
+              </td>
 
-                <td className="rating-cell">
-                  ★{" "}
-                  {Number.isFinite(calificacion)
-                    ? calificacion.toFixed(1)
-                    : taller.resenia}
-                </td>
+              <td>
+                <div className="action-buttons">
+                  <button
+                    type="button"
+                    className="edit-button"
+                    onClick={() => onEdit?.(taller)}
+                    title="Editar taller"
+                  >
+                    ✎
+                  </button>
 
-                <td>
-                  <div className="action-buttons">
-                    <button
-                      type="button"
-                      className="edit-button"
-                      onClick={() => onEdit?.(taller)}
-                      aria-label={`Editar ${taller.nombreTaller}`}
-                    >
-                      ✎
-                    </button>
-
-                    <button
-                      type="button"
-                      className="delete-button"
-                      onClick={() => onDelete?.(taller)}
-                      aria-label={`Eliminar ${taller.nombreTaller}`}
-                    >
-                      🗑
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
+                  <button
+                    type="button"
+                    className="delete-button"
+                    onClick={() => onDelete?.(taller)}
+                    title="Eliminar taller"
+                  >
+                    🗑
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
