@@ -322,7 +322,7 @@ useEffect(() => {
               />
 
               {cargando && (
-                <Loading mensaje="Conectando con los talleres comunitarios..." />
+                <Loading />
               )}
 
               {!cargando && error && (
