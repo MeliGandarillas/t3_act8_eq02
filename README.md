@@ -2,263 +2,72 @@
 
 Actividad 8 — Sistema web con React, consumo de APIs y despliegue en VPS.
 
-Back-office administrativo para ARIPO (Artesanías e Industrias Populares de Oaxaca). El sistema permite al personal de la institución iniciar sesión, consultar, filtrar y administrar el catálogo de talleres y experiencias artesanales de comunidades oaxaqueñas.
+Back-office administrativo para ARIPO (Artesanías e Industrias Populares de
+Oaxaca): permite al personal de la institución validar y gestionar el
+catálogo de talleres y experiencias de los artesanos de las comunidades
+oaxaqueñas.
 
 ## Equipo (Equipo 02)
 
-- Caballero Silva Dalia Montserrat
+- Caballero Silva Dalia Montserrat 
 - Gandarillas Melissa
 
 ## Enlaces
 
-- Repositorio: https://github.com/MeliGandarillas/t3_act8_eq02
+- Repositorio: `https://github.com/MeliGandarillas/t3_act8_eq02`
 - Proyecto desplegado: http://54.83.75.25/t3_act8_eq02/
 
-## Stack tecnológico
+## Stack
 
-- **Frontend:** React 19 + Vite
-- **Enrutamiento:** React Router DOM
-- **Estilos:** CSS puro, con una paleta cálida inspirada en textiles, barro y artesanías oaxaqueñas
-- **Servidor:** Nginx sobre una instancia de AWS EC2 con Ubuntu
-- **Control de versiones:** Git y GitHub
+- **Frontend:** React + Vite
+- **Enrutamiento:** react-router-dom (paginación con estado reflejado en la URL)
+- **Estilos:** CSS puro, paleta cálida inspirada en textiles y barro oaxaqueño
+- **Servidor:** Nginx sobre una instancia de AWS EC2 (Ubuntu)
 
 ## APIs consumidas
 
-### Autenticación
-
-Se utiliza **DummyJSON Auth** para simular el inicio de sesión del personal administrativo.
-
-- Endpoint: https://dummyjson.com/auth/login
-- Método: `POST`
-
-Ejemplo de credenciales válidas:
-
-```text
-Usuario: emilys
-Contraseña: emilyspass
-```
-
-### Catálogo de talleres
-
-Se utiliza **MockAPI** para consultar y administrar los registros de los talleres artesanales.
-
-- Endpoint: https://6a545ff38547b9f7111c26d6.mockapi.io/talleres
-- Métodos utilizados:
-  - `GET`: obtener los talleres
-  - `POST`: agregar un taller
-  - `PATCH`: editar un taller
-  - `DELETE`: eliminar un taller
-
-Las llamadas a las APIs se encuentran separadas de los componentes en:
-
-```text
-src/services/authService.js
-src/services/api.js
-```
+- **Autenticación:** [DummyJSON Auth](https://dummyjson.com/auth/login) — login del personal administrativo
+- **Catálogo de talleres:** [MockAPI](https://6a545ff38547b9f7111c26d6.mockapi.io/talleres) — consulta y administración de los registros de talleres mediante peticiones GET, POST, PATCH y DELETE
 
 ## Funcionalidades
 
-### Login
+**Login**
+- Formulario con validación de campos vacíos antes de enviar la petición
+- Mensaje de error claro si las credenciales son incorrectas
+- Sesión persistida para no perder el login al recargar la página
 
-- Formulario con campos de usuario y contraseña.
-- Validación para evitar el envío de campos vacíos.
-- Petición real de autenticación a DummyJSON.
-- Mensaje de error claro cuando las credenciales son incorrectas.
-- Almacenamiento de los datos del usuario autenticado en el estado de React.
-- Persistencia de la sesión mediante `localStorage`.
-- Recuperación automática de la sesión al recargar la página.
+**Layout y protección**
+- Navbar con foto y nombre del usuario autenticado, y botón de cerrar sesión
+- Sidebar con navegación entre secciones
+- La vista del panel no es accesible sin una sesión activa; la protección se realiza mediante renderizado condicional en `App.jsx`, utilizando el estado del usuario y `localStorage`
 
-### Protección del sistema
+**Catálogo de talleres**
+- Tabla con filtro de texto y filtro por categoría/ubicación
+- Paginación con selector de registros por página, reflejada en la URL (`?page=`, `?limit=`)
+- Indicador de carga y manejo de errores de red
 
-La vista administrativa se protege mediante renderizado condicional en `App.jsx`.
-
-Cuando no existe un usuario autenticado en el estado, solamente se muestra `LoginPage`. Cuando existe una sesión activa, se muestra `DataPage`.
-
-Al cerrar sesión se elimina el usuario de `localStorage`, se limpia el estado y se regresa al formulario de login.
-
-### Layout administrativo
-
-- Navbar con fotografía y nombre del usuario autenticado.
-- Botón para cerrar sesión.
-- Sidebar con diferentes opciones de navegación.
-- Vista de panel de bienvenida.
-- Sección de talleres con tabla interactiva.
-- Opciones adicionales simuladas para completar la navegación lateral.
-
-### Catálogo de talleres
-
-- Consulta de datos desde MockAPI.
-- Tabla con los siguientes campos:
-  - ID
-  - Nombre del taller
-  - Responsable
-  - Especialidad
-  - Ubicación
-  - Reseña
-  - Acciones
-- Filtro de texto por nombre del taller o responsable.
-- Filtro por especialidad.
-- Filtro por ubicación.
-- Mensaje cuando no se encuentran resultados.
-- Indicador de carga durante la petición.
-- Mensaje legible cuando ocurre un error de red.
-
-### Paginación
-
-- Controles para avanzar y regresar entre páginas.
-- Selector de cantidad de registros por página:
-  - 10
-  - 20
-  - 40
-  - 50
-- Página y límite reflejados en la URL mediante parámetros:
-
-```text
-?page=2&limit=20
-```
-
-- La paginación utiliza `useSearchParams` de React Router DOM.
-- Al cambiar un filtro se regresa automáticamente a la primera página.
-- La URL puede compartirse y permite utilizar los botones de avanzar y regresar del navegador.
-
-### CRUD
-
-#### Agregar
-
-- Formulario para registrar un nuevo taller.
-- Validación de campos obligatorios.
-- Validación de la reseña dentro del rango de 1 a 5.
-- Petición real `POST` a MockAPI.
-- Actualización del estado local con `useState`.
-- Mensaje de confirmación al completar la operación.
-
-#### Editar
-
-- Botón de edición en cada registro.
-- Mensaje de confirmación antes de abrir el formulario.
-- Formulario precargado con la información del taller.
-- Petición real `PATCH` a MockAPI.
-- Sustitución del registro actualizado en el estado local.
-- Mensaje de confirmación al completar la operación.
-
-#### Eliminar
-
-- Botón de eliminación en cada registro.
-- Mensaje de confirmación antes de eliminar.
-- Petición real `DELETE` a MockAPI.
-- Eliminación del registro del estado local.
-- Mensaje de confirmación al completar la operación.
-
-## Validaciones y manejo de errores
-
-- Validación de campos vacíos en el login.
-- Validación de campos obligatorios en el formulario de talleres.
-- Validación numérica de la reseña.
-- Mensajes de error visibles para el usuario.
-- Botones deshabilitados mientras una operación se está procesando.
-- Manejo de errores de las peticiones mediante `try`, `catch` y mensajes personalizados.
-- Uso de un componente de carga reutilizable.
+**CRUD**
+- Agregar, editar y eliminar registros del catálogo
+- Confirmación previa antes de editar o eliminar
+- Cada acción hace una petición real a la API antes de actualizar el estado local
 
 ## Estructura del proyecto
 
-```text
+```
 src/
-├── components/
-│   ├── DataFilters.jsx
-│   ├── DataForm.jsx
-│   ├── DataTable.jsx
-│   ├── DialogoConfirmacion.jsx
-│   ├── Loading.jsx
-│   ├── Modal.jsx
-│   ├── Navbar.jsx
-│   ├── Pagination.jsx
-│   └── Sidebar.jsx
-├── pages/
-│   ├── DataPage.jsx
-│   └── LoginPage.jsx
-├── services/
-│   ├── api.js
-│   └── authService.js
-├── styles/
-│   ├── global.css
-│   ├── layout.css
-│   ├── loading.css
-│   ├── login.css
-│   ├── modal.css
-│   └── table.css
+├── components/    # Navbar, Sidebar, Modal, DialogoConfirmacion, DataForm, DataTable, DataFilters, Pagination, Loading
+├── pages/         # LoginPage, DataPage
+├── services/      # authService.js, api.js
+├── styles/        # global.css, layout.css, login.css, modal.css, table.css, loading.css
 ├── App.jsx
 └── main.jsx
 ```
 
-## Organización del código
-
-- Las llamadas de autenticación se encuentran en `src/services/authService.js`.
-- Las llamadas CRUD de talleres se encuentran en `src/services/api.js`.
-- La interfaz está dividida en componentes reutilizables.
-- La página principal administra los filtros, la paginación y el estado local.
-- Los nombres de funciones y variables describen claramente su propósito.
-- Los errores se muestran en pantalla y no solamente en la consola.
-
-## Instalación y ejecución local
-
-Clonar el repositorio:
-
-```bash
-git clone https://github.com/MeliGandarillas/t3_act8_eq02.git
-```
-
-Entrar a la carpeta del proyecto:
-
-```bash
-cd t3_act8_eq02
-```
-
-Instalar las dependencias:
-
-```bash
-npm install
-```
-
-Iniciar el servidor de desarrollo:
-
-```bash
-npm run dev
-```
-
-## Comprobación del proyecto
-
-Ejecutar ESLint:
-
-```bash
-npm run lint
-```
-
-Generar el build de producción:
+## Despliegue
 
 ```bash
 npm run build
 ```
 
-La carpeta generada para producción es:
-
-```text
-dist/
-```
-
-## Despliegue en el VPS
-
-El archivo `vite.config.js` contiene la ruta base:
-
-```js
-base: "/t3_act8_eq02/",
-```
-
-
-
-El archivo `.gitignore` evita subir carpetas y archivos innecesarios, como:
-
-```text
-node_modules/
-dist/
-.env
-```
+El `base` en `vite.config.js` está configurado como `/t3_act8_eq02/` para
+que las rutas coincidan con la carpeta servida por Nginx en el VPS.
