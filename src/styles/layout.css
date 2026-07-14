@@ -79,3 +79,52 @@
   padding: 24px;
   min-width: 0;
 }
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navbar-logo {
+  width: 72px;
+  height: 72px;
+
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.navbar-title {
+  color: #211c18;
+
+  font-size: 22px;
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .navbar {
+    padding: 12px 14px;
+  }
+
+  .navbar-brand {
+    gap: 9px;
+  }
+
+  .navbar-logo {
+    width: 48px;
+    height: 48px;
+  }
+
+  .navbar-title {
+    font-size: 16px;
+  }
+
+  .navbar-greeting {
+    display: none;
+  }
+
+  .navbar-logout {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+}
