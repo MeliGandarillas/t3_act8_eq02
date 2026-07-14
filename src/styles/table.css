@@ -315,3 +315,46 @@
     font-size: 32px;
   }
 }
+
+@media (max-width: 700px) {
+  .filters-container {
+    margin-bottom: 24px;
+  }
+
+  .search-input,
+  .filter-select {
+    padding: 14px 15px;
+  }
+
+  .select-filters {
+    margin-top: 14px;
+  }
+
+  .table-container,
+  .artisans-table-container {
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pagination-controls {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .pagination-limit {
+    width: 100%;
+  }
+
+  .pagination-pages {
+    width: 100%;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .page-button {
+    flex: 0 0 auto;
+  }
+}
