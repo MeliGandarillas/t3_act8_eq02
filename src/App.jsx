@@ -1,18 +1,31 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import LoginPage from "./pages/LoginPage";
 import DataPage from "./pages/DataPage";
 
-function App() {
-  const [usuarioActivo, setUsuarioActivo] = useState(null);
+function obtenerUsuarioGuardado() {
+  try {
+    const usuarioGuardado =
+      localStorage.getItem("usuarioActivo");
 
-  useEffect(() => {
-    const usuarioGuardado = localStorage.getItem("usuarioActivo");
-    if (usuarioGuardado) {
-      setUsuarioActivo(JSON.parse(usuarioGuardado));
-    }
-  }, []);
+    return usuarioGuardado
+      ? JSON.parse(usuarioGuardado)
+      : null;
+  } catch {
+    localStorage.removeItem("usuarioActivo");
+    return null;
+  }
+}
+
+function App() {
+  const [usuarioActivo, setUsuarioActivo] =
+    useState(obtenerUsuarioGuardado);
 
   function handleLoginSuccess(userData) {
+    localStorage.setItem(
+      "usuarioActivo",
+      JSON.stringify(userData)
+    );
+
     setUsuarioActivo(userData);
   }
 
@@ -22,10 +35,19 @@ function App() {
   }
 
   if (!usuarioActivo) {
-    return <LoginPage onLoginSuccess={handleLoginSuccess} />;
+    return (
+      <LoginPage
+        onLoginSuccess={handleLoginSuccess}
+      />
+    );
   }
 
-  return <DataPage usuarioActivo={usuarioActivo} onLogout={handleLogout} />;
+  return (
+    <DataPage
+      usuarioActivo={usuarioActivo}
+      onLogout={handleLogout}
+    />
+  );
 }
 
 export default App;
