@@ -1,4 +1,4 @@
-import React from 'react';
+
 import '../styles/modal.css';
 
 const Modal = ({ isOpen, title, children, onClose }) => {
