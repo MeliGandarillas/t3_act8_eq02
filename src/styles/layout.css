@@ -51,6 +51,11 @@
 }
 
 .sidebar-item {
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-family: inherit;
   padding: 10px 12px;
   border-radius: 8px;
   color: var(--color-brown);

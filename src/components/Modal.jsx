@@ -1,7 +1,6 @@
+import "../styles/modal.css";
 
-import '../styles/modal.css';
-
-const Modal = ({ isOpen, title, children, onClose }) => {
+function Modal({ isOpen, title, children, onClose }) {
   if (!isOpen) {
     return null;
   }
@@ -14,22 +13,31 @@ const Modal = ({ isOpen, title, children, onClose }) => {
 
   return (
     <div className="modal-overlay" onClick={handleOverlayClick}>
-      <div className="modal-card">
+      <section
+        className="modal-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
         <div className="modal-header">
-          <p className="modal-title">{title}</p>
+          <h2 id="modal-title" className="modal-title">
+            {title}
+          </h2>
+
           <button
-  type="button"
-  className="modal-close"
-  onClick={onClose}
-  aria-label="Cerrar"
->
-  ✕
-</button>
+            type="button"
+            className="modal-close"
+            onClick={onClose}
+            aria-label="Cerrar"
+          >
+            ✕
+          </button>
         </div>
+
         <div className="modal-body">{children}</div>
-      </div>
+      </section>
     </div>
   );
-};
+}
 
 export default Modal;

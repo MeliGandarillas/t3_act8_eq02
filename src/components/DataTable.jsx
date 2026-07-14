@@ -46,7 +46,7 @@ function DataTable({ talleres, onEdit, onDelete }) {
               <td>{taller.ubicacion}</td>
 
               <td className="rating-cell">
-                ★ {Number(taller.resenia).toFixed(1)}
+                ★ {Number(taller.resenia ?? 0).toFixed(1)}
               </td>
 
               <td>
