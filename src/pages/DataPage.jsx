@@ -13,7 +13,6 @@ import Pagination from "../components/Pagination";
 
 import {
   createTaller,
-  deleteTaller,
   getTalleres,
   updateTaller,
 } from "../services/api";
@@ -238,7 +237,7 @@ function DataPage({ usuarioActivo, onLogout }) {
     }
   }
 
-  async function confirmarAccion() {
+  function confirmarAccion() {
     if (!confirmacion.taller) {
       return;
     }
@@ -252,30 +251,21 @@ function DataPage({ usuarioActivo, onLogout }) {
     }
 
     if (confirmacion.tipo === "eliminar") {
-      try {
-        setProcesando(true);
-        await deleteTaller(confirmacion.taller.id);
+      const idTallerEliminado = confirmacion.taller.id;
 
-        setTalleres((talleresActuales) =>
-          talleresActuales.filter(
-            (taller) => String(taller.id) !== String(confirmacion.taller.id)
-          )
-        );
+      setTalleres((talleresActuales) =>
+        talleresActuales.filter(
+          (taller) => String(taller.id) !== String(idTallerEliminado)
+        )
+      );
 
-        setNotificacion({
-          tipo: "exito",
-          texto: "Taller eliminado correctamente.",
-        });
-        setConfirmacion(confirmacionInicial);
-      } catch (errorEliminacion) {
-        setConfirmacion(confirmacionInicial);
-        setNotificacion({
-          tipo: "error",
-          texto: errorEliminacion.message,
-        });
-      } finally {
-        setProcesando(false);
-      }
+      setNotificacion({
+        tipo: "exito",
+        texto:
+          "Taller eliminado temporalmente. Volverá a aparecer al recargar la página.",
+      });
+
+      setConfirmacion(confirmacionInicial);
     }
   }
 
