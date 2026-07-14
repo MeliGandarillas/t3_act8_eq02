@@ -1,11 +1,13 @@
 import { useState } from "react";
+import alebrijeLogo from "../assets/icono.png";
 import { loginUser } from "../services/authService";
-import icono from "../assets/icono.png";
 import "../styles/login.css";
+import "../styles/password-toggle.css";
 
 function LoginPage({ onLoginSuccess }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [mostrarPassword, setMostrarPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -30,57 +32,137 @@ function LoginPage({ onLoginSuccess }) {
     }
   }
 
+  function alternarPassword() {
+    setMostrarPassword((valorActual) => !valorActual);
+  }
+
   return (
-    <main className="login-container">
-      <form className="login-card" onSubmit={handleSubmit}>
-        <header className="login-header">
+    <div className="login-container">
+      <form
+        className="login-card"
+        onSubmit={handleSubmit}
+        noValidate
+      >
+        <div className="login-header">
           <img
-            src={icono}
-            alt="Logo de Manos de Oaxaca"
-            className="login-logo"
+            src={alebrijeLogo}
+            alt="Alebrije de Manos de Oaxaca"
+            className="login-logo-image"
           />
 
-          <h1 className="login-title">Manos de Oaxaca</h1>
+          <p className="login-title">
+            Manos de Oaxaca
+          </p>
 
           <p className="login-subtitle">
             Conecta con artesanos y sus talleres
           </p>
-        </header>
-
-        <div className="login-field">
-          <label className="login-label" htmlFor="username">
-            Nombre de usuario
-          </label>
-
-          <input
-            id="username"
-            type="text"
-            className="login-input"
-            placeholder="Usuario"
-            value={username}
-            onChange={(event) => setUsername(event.target.value)}
-            autoComplete="username"
-          />
         </div>
 
-        <div className="login-field">
-          <label className="login-label" htmlFor="password">
-            Contraseña
-          </label>
+        <label
+          className="login-label"
+          htmlFor="username"
+        >
+          Nombre de usuario
+        </label>
 
+        <input
+          id="username"
+          name="username"
+          type="text"
+          className="login-input"
+          placeholder="Usuario"
+          value={username}
+          onChange={(event) =>
+            setUsername(event.target.value)
+          }
+          autoComplete="username"
+        />
+
+        <label
+          className="login-label"
+          htmlFor="password"
+        >
+          Contraseña
+        </label>
+
+        <div className="login-password-wrapper">
           <input
             id="password"
-            type="password"
-            className="login-input"
-            placeholder="••••••••••••"
+            name="password"
+            type={mostrarPassword ? "text" : "password"}
+            className="login-input login-password-input"
+            placeholder="••••••••"
             value={password}
-            onChange={(event) => setPassword(event.target.value)}
+            onChange={(event) =>
+              setPassword(event.target.value)
+            }
             autoComplete="current-password"
           />
+
+          <button
+            type="button"
+            className="login-password-toggle"
+            onClick={alternarPassword}
+            aria-label={
+              mostrarPassword
+                ? "Ocultar contraseña"
+                : "Mostrar contraseña"
+            }
+            title={
+              mostrarPassword
+                ? "Ocultar contraseña"
+                : "Mostrar contraseña"
+            }
+          >
+            {mostrarPassword ? (
+              <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  d="M3 3 21 21M10.6 10.7a2 2 0 0 0 2.7 2.7M9.9 4.2A10.8 10.8 0 0 1 12 4c5.2 0 9 4.7 9 8a7.6 7.6 0 0 1-2 3.9M6.6 6.7C4.3 8.1 3 10.3 3 12c0 3.3 3.8 8 9 8a9.7 9.7 0 0 0 4.1-.9"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            ) : (
+              <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  d="M3 12c0-3.3 3.8-8 9-8s9 4.7 9 8-3.8 8-9 8-9-4.7-9-8Z"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="3"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                />
+              </svg>
+            )}
+          </button>
         </div>
 
         {errorMessage && (
-          <p className="login-error">{errorMessage}</p>
+          <p
+            className="login-error"
+            role="alert"
+          >
+            {errorMessage}
+          </p>
         )}
 
         <button
@@ -91,11 +173,11 @@ function LoginPage({ onLoginSuccess }) {
           {isLoading ? "Entrando..." : "Entrar"}
         </button>
 
-        <p className="login-help">
+        <p className="login-register">
           Ingresa tus credenciales para acceder al sistema.
         </p>
       </form>
-    </main>
+    </div>
   );
 }
 
