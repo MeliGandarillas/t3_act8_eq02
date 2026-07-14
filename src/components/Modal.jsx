@@ -17,9 +17,14 @@ const Modal = ({ isOpen, title, children, onClose }) => {
       <div className="modal-card">
         <div className="modal-header">
           <p className="modal-title">{title}</p>
-          <button className="modal-close" onClick={onClose} aria-label="Cerrar">
-            ✕
-          </button>
+          <button
+  type="button"
+  className="modal-close"
+  onClick={onClose}
+  aria-label="Cerrar"
+>
+  ✕
+</button>
         </div>
         <div className="modal-body">{children}</div>
       </div>
