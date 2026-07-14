@@ -1,7 +1,7 @@
 import "../styles/loading.css";
 
 const Loading = ({
-  mensaje = "Cargando experiencias artesanales...",
+  mensaje = "Cargando talleres artesanales...",
 }) => {
   return (
     <div className="loading-container" role="status">
