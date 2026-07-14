@@ -10,6 +10,8 @@ import DialogoConfirmacion from "../components/DialogoConfirmacion";
 import Loading from "../components/Loading";
 import Modal from "../components/Modal";
 import Pagination from "../components/Pagination";
+import PanelResumen from "../components/PanelResumen";
+import ListaArtesanos from "../components/ListaArtesanos";
 
 import {
   createTaller,
@@ -19,6 +21,7 @@ import {
 
 import "../styles/layout.css";
 import "../styles/table.css";
+import "../styles/dashboard.css";
 
 const confirmacionInicial = {
   isOpen: false,
@@ -60,10 +63,6 @@ function DataPage({ usuarioActivo, onLogout }) {
     : 10;
 
   useEffect(() => {
-    if (opcionActiva !== "talleres") {
-      return;
-    }
-
     async function cargarTalleres() {
       try {
         setCargando(true);
@@ -78,7 +77,7 @@ function DataPage({ usuarioActivo, onLogout }) {
     }
 
     cargarTalleres();
-  }, [opcionActiva]);
+  }, []);
 
   useEffect(() => {
     if (!searchParams.has("page") || !searchParams.has("limit")) {
@@ -105,6 +104,68 @@ function DataPage({ usuarioActivo, onLogout }) {
         talleres.map((taller) => taller.ubicacion).filter(Boolean)
       ),
     ].sort();
+  }, [talleres]);
+
+  const resumenEspecialidades = useMemo(() => {
+    const conteo = new Map();
+
+    talleres.forEach((taller) => {
+      const nombre = taller.especialidad?.trim() || "Sin especialidad";
+      conteo.set(nombre, (conteo.get(nombre) ?? 0) + 1);
+    });
+
+    return [...conteo.entries()]
+      .map(([nombre, total]) => ({ nombre, total }))
+      .sort((a, b) =>
+        b.total !== a.total
+          ? b.total - a.total
+          : a.nombre.localeCompare(b.nombre, "es")
+      );
+  }, [talleres]);
+
+  const artesanos = useMemo(() => {
+    const responsables = new Map();
+
+    talleres.forEach((taller) => {
+      const nombre = taller.responsable?.trim();
+
+      if (!nombre) {
+        return;
+      }
+
+      const clave = nombre.toLocaleLowerCase("es-MX");
+      const artesanoActual = responsables.get(clave) ?? {
+        clave,
+        nombre,
+        totalTalleres: 0,
+        especialidades: new Set(),
+        ubicaciones: new Set(),
+      };
+
+      artesanoActual.totalTalleres += 1;
+
+      if (taller.especialidad?.trim()) {
+        artesanoActual.especialidades.add(taller.especialidad.trim());
+      }
+
+      if (taller.ubicacion?.trim()) {
+        artesanoActual.ubicaciones.add(taller.ubicacion.trim());
+      }
+
+      responsables.set(clave, artesanoActual);
+    });
+
+    return [...responsables.values()]
+      .map((artesano) => ({
+        ...artesano,
+        especialidades: [...artesano.especialidades].sort((a, b) =>
+          a.localeCompare(b, "es")
+        ),
+        ubicaciones: [...artesano.ubicaciones].sort((a, b) =>
+          a.localeCompare(b, "es")
+        ),
+      }))
+      .sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
   }, [talleres]);
 
   const talleresFiltrados = useMemo(() => {
@@ -343,16 +404,21 @@ function DataPage({ usuarioActivo, onLogout }) {
 
         <main className="app-content">
           {opcionActiva === "panel" && (
-            <section>
-              <h1>¡Bienvenido!</h1>
-              <p>Selecciona una opción del menú lateral.</p>
-            </section>
+            <PanelResumen
+              talleres={talleres}
+              artesanos={artesanos}
+              especialidades={resumenEspecialidades}
+              cargando={cargando}
+              error={error}
+            />
           )}
 
           {opcionActiva === "artesanos" && (
-            <section>
-              <h1>Artesanos registrados</h1>
-            </section>
+            <ListaArtesanos
+              artesanos={artesanos}
+              cargando={cargando}
+              error={error}
+            />
           )}
 
           {opcionActiva === "talleres" && (
