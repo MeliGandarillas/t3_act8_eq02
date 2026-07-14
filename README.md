@@ -7,7 +7,7 @@ Oaxaca): permite al personal de la institución validar y gestionar el
 catálogo de talleres y experiencias de los artesanos de las comunidades
 oaxaqueñas.
 
-## Equipo (Equipo 02)
+## Equipo 02:
 
 - Caballero Silva Dalia Montserrat 
 - Gandarillas Melissa
