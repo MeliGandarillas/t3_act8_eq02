@@ -7,7 +7,7 @@ Oaxaca): permite al personal de la institución validar y gestionar el
 catálogo de talleres y experiencias de los artesanos de las comunidades
 oaxaqueñas.
 
-## Equipo (Equipo 02)
+## Equipo 02:
 
 - Caballero Silva Dalia Montserrat 
 - Gandarillas Melissa
@@ -27,7 +27,7 @@ oaxaqueñas.
 ## APIs consumidas
 
 - **Autenticación:** [DummyJSON Auth](https://dummyjson.com/auth/login) — login del personal administrativo
-- **Catálogo de talleres:** [MockAPI](https://6a545ff38547b9f7111c26d6.mockapi.io/talleres) — consulta y administración de los registros de talleres mediante peticiones GET, POST, PATCH y DELETE
+- **Catálogo de talleres:** [MockAPI](https://6a545ff38547b9f7111c26d6.mockapi.io/talleres) — consulta y administración de los registros de talleres mediante peticiones GET, POST, PUT y DELETE
 
 ## Funcionalidades
 
