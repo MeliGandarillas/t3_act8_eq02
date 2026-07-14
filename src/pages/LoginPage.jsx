@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { loginUser } from "../services/authService";
+import icono from "../assets/icono.png";
 import "../styles/login.css";
 
 function LoginPage({ onLoginSuccess }) {
@@ -21,8 +22,7 @@ function LoginPage({ onLoginSuccess }) {
 
     try {
       const userData = await loginUser(username, password);
-      localStorage.setItem("usuarioActivo", JSON.stringify(userData));
-       onLoginSuccess(userData);
+      onLoginSuccess(userData);
     } catch (error) {
       setErrorMessage(error.message);
     } finally {
@@ -31,38 +31,71 @@ function LoginPage({ onLoginSuccess }) {
   }
 
   return (
-    <div className="login-container">
+    <main className="login-container">
       <form className="login-card" onSubmit={handleSubmit}>
-        <div className="login-header">
-          <p className="login-title">Manos de Oaxaca</p>
-          <p className="login-subtitle">Conecta con artesanos y sus talleres</p>
+        <header className="login-header">
+          <img
+            src={icono}
+            alt="Logo de Manos de Oaxaca"
+            className="login-logo"
+          />
+
+          <h1 className="login-title">Manos de Oaxaca</h1>
+
+          <p className="login-subtitle">
+            Conecta con artesanos y sus talleres
+          </p>
+        </header>
+
+        <div className="login-field">
+          <label className="login-label" htmlFor="username">
+            Nombre de usuario
+          </label>
+
+          <input
+            id="username"
+            type="text"
+            className="login-input"
+            placeholder="Usuario"
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+            autoComplete="username"
+          />
         </div>
 
-        <label className="login-label">Nombre de usuario:</label>
-        <input
-          type="text"
-          className="login-input"
-          placeholder="Usuario"
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-        />
+        <div className="login-field">
+          <label className="login-label" htmlFor="password">
+            Contraseña
+          </label>
 
-        <label className="login-label">Contraseña:</label>
-        <input
-          type="password"
-          className="login-input"
-          placeholder="••••••••"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-        />
+          <input
+            id="password"
+            type="password"
+            className="login-input"
+            placeholder="••••••••••••"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            autoComplete="current-password"
+          />
+        </div>
 
-        {errorMessage && <p className="login-error">{errorMessage}</p>}
+        {errorMessage && (
+          <p className="login-error">{errorMessage}</p>
+        )}
 
-        <button type="submit" className="login-button" disabled={isLoading}>
+        <button
+          type="submit"
+          className="login-button"
+          disabled={isLoading}
+        >
           {isLoading ? "Entrando..." : "Entrar"}
         </button>
+
+        <p className="login-help">
+          Ingresa tus credenciales para acceder al sistema.
+        </p>
       </form>
-    </div>
+    </main>
   );
 }
 
