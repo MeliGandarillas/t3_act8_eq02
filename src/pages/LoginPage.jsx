@@ -21,8 +21,7 @@ function LoginPage({ onLoginSuccess }) {
 
     try {
       const userData = await loginUser(username, password);
-      localStorage.setItem("usuarioActivo", JSON.stringify(userData));
-      onLoginSuccess(userData);
+       onLoginSuccess(userData);
     } catch (error) {
       setErrorMessage(error.message);
     } finally {
