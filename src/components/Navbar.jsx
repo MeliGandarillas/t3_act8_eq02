@@ -1,6 +1,6 @@
 import "../styles/layout.css";
 
-function Navbar({ usuarioActivo, onLogout }) {
+function Navbar({usuarioActivo, onLogout }) {
   return (
     <div className="navbar">
       <div className="navbar-brand">
