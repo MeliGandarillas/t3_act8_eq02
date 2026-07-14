@@ -27,7 +27,7 @@ oaxaqueñas.
 ## APIs consumidas
 
 - **Autenticación:** [DummyJSON Auth](https://dummyjson.com/auth/login) — login del personal administrativo
-- **Catálogo de talleres:** [MockAPI](https://6a545ff38547b9f7111c26d6.mockapi.io/talleres) — consulta y administración de los registros de talleres mediante peticiones GET, POST, PATCH y DELETE
+- **Catálogo de talleres:** [MockAPI](https://6a545ff38547b9f7111c26d6.mockapi.io/talleres) — consulta y administración de los registros de talleres mediante peticiones GET, POST, PUT y DELETE
 
 ## Funcionalidades
 
