@@ -55,23 +55,33 @@ function DataPage({ usuarioActivo, onLogout }) {
     ? limiteParametro
     : 10;
 
-  useEffect(() => {
-    async function cargarTalleres() {
-      try {
-        setCargando(true);
-        setError("");
+useEffect(() => {
+  if (opcionActiva !== "talleres") {
+    return;
+  }
 
-        const datos = await getTalleres();
-        setTalleres(datos);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setCargando(false);
-      }
+  async function cargarTalleres() {
+    try {
+      setCargando(true);
+      setError("");
+
+      const datos = await getTalleres();
+
+      // Solo permite apreciar el Loading durante la prueba
+      await new Promise((resolve) =>
+        setTimeout(resolve, 1000)
+      );
+
+      setTalleres(datos);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setCargando(false);
     }
+  }
 
-    cargarTalleres();
-  }, []);
+  cargarTalleres();
+}, [opcionActiva]);
 
   useEffect(() => {
     if (
@@ -311,7 +321,9 @@ function DataPage({ usuarioActivo, onLogout }) {
                 ubicaciones={ubicaciones}
               />
 
-              {cargando && <Loading />}
+              {cargando && (
+                <Loading mensaje="Conectando con los talleres comunitarios..." />
+              )}
 
               {!cargando && error && (
                 <p className="error-message">
