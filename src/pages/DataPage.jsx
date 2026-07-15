@@ -15,6 +15,7 @@ import ListaArtesanos from "../components/ListaArtesanos";
 
 import {
   createTaller,
+  deleteTaller,
   getTalleres,
   updateTaller,
 } from "../services/api";
@@ -39,9 +40,16 @@ function DataPage({ usuarioActivo, onLogout }) {
   const [especialidad, setEspecialidad] = useState("");
   const [ubicacion, setUbicacion] = useState("");
 
-  const [modalFormularioAbierto, setModalFormularioAbierto] = useState(false);
-  const [tallerSeleccionado, setTallerSeleccionado] = useState(null);
-  const [confirmacion, setConfirmacion] = useState(confirmacionInicial);
+  const [modalFormularioAbierto, setModalFormularioAbierto] =
+    useState(false);
+
+  const [tallerSeleccionado, setTallerSeleccionado] =
+    useState(null);
+
+  const [confirmacion, setConfirmacion] = useState(
+    confirmacionInicial
+  );
+
   const [procesando, setProcesando] = useState(false);
   const [notificacion, setNotificacion] = useState(null);
   const [errorFormulario, setErrorFormulario] = useState("");
@@ -67,7 +75,9 @@ function DataPage({ usuarioActivo, onLogout }) {
       try {
         setCargando(true);
         setError("");
+
         const datos = await getTalleres();
+
         setTalleres(datos);
       } catch (errorCarga) {
         setError(errorCarga.message);
@@ -80,13 +90,21 @@ function DataPage({ usuarioActivo, onLogout }) {
   }, []);
 
   useEffect(() => {
-    if (!searchParams.has("page") || !searchParams.has("limit")) {
+    if (
+      !searchParams.has("page") ||
+      !searchParams.has("limit")
+    ) {
       setSearchParams({
         page: String(paginaActual),
         limit: String(limite),
       });
     }
-  }, [searchParams, setSearchParams, paginaActual, limite]);
+  }, [
+    searchParams,
+    setSearchParams,
+    paginaActual,
+    limite,
+  ]);
 
   const especialidades = useMemo(() => {
     return [
@@ -101,7 +119,9 @@ function DataPage({ usuarioActivo, onLogout }) {
   const ubicaciones = useMemo(() => {
     return [
       ...new Set(
-        talleres.map((taller) => taller.ubicacion).filter(Boolean)
+        talleres
+          .map((taller) => taller.ubicacion)
+          .filter(Boolean)
       ),
     ].sort();
   }, [talleres]);
@@ -110,12 +130,20 @@ function DataPage({ usuarioActivo, onLogout }) {
     const conteo = new Map();
 
     talleres.forEach((taller) => {
-      const nombre = taller.especialidad?.trim() || "Sin especialidad";
-      conteo.set(nombre, (conteo.get(nombre) ?? 0) + 1);
+      const nombre =
+        taller.especialidad?.trim() || "Sin especialidad";
+
+      conteo.set(
+        nombre,
+        (conteo.get(nombre) ?? 0) + 1
+      );
     });
 
     return [...conteo.entries()]
-      .map(([nombre, total]) => ({ nombre, total }))
+      .map(([nombre, total]) => ({
+        nombre,
+        total,
+      }))
       .sort((a, b) =>
         b.total !== a.total
           ? b.total - a.total
@@ -134,22 +162,28 @@ function DataPage({ usuarioActivo, onLogout }) {
       }
 
       const clave = nombre.toLocaleLowerCase("es-MX");
-      const artesanoActual = responsables.get(clave) ?? {
-        clave,
-        nombre,
-        totalTalleres: 0,
-        especialidades: new Set(),
-        ubicaciones: new Set(),
-      };
+
+      const artesanoActual =
+        responsables.get(clave) ?? {
+          clave,
+          nombre,
+          totalTalleres: 0,
+          especialidades: new Set(),
+          ubicaciones: new Set(),
+        };
 
       artesanoActual.totalTalleres += 1;
 
       if (taller.especialidad?.trim()) {
-        artesanoActual.especialidades.add(taller.especialidad.trim());
+        artesanoActual.especialidades.add(
+          taller.especialidad.trim()
+        );
       }
 
       if (taller.ubicacion?.trim()) {
-        artesanoActual.ubicaciones.add(taller.ubicacion.trim());
+        artesanoActual.ubicaciones.add(
+          taller.ubicacion.trim()
+        );
       }
 
       responsables.set(clave, artesanoActual);
@@ -158,14 +192,22 @@ function DataPage({ usuarioActivo, onLogout }) {
     return [...responsables.values()]
       .map((artesano) => ({
         ...artesano,
-        especialidades: [...artesano.especialidades].sort((a, b) =>
+
+        especialidades: [
+          ...artesano.especialidades,
+        ].sort((a, b) =>
           a.localeCompare(b, "es")
         ),
-        ubicaciones: [...artesano.ubicaciones].sort((a, b) =>
+
+        ubicaciones: [
+          ...artesano.ubicaciones,
+        ].sort((a, b) =>
           a.localeCompare(b, "es")
         ),
       }))
-      .sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
+      .sort((a, b) =>
+        a.nombre.localeCompare(b.nombre, "es")
+      );
   }, [talleres]);
 
   const talleresFiltrados = useMemo(() => {
@@ -174,39 +216,71 @@ function DataPage({ usuarioActivo, onLogout }) {
     return talleres.filter((taller) => {
       const coincideBusqueda =
         texto === "" ||
-        taller.nombreTaller?.toLowerCase().includes(texto) ||
-        taller.responsable?.toLowerCase().includes(texto);
+        taller.nombreTaller
+          ?.toLowerCase()
+          .includes(texto) ||
+        taller.responsable
+          ?.toLowerCase()
+          .includes(texto);
 
       const coincideEspecialidad =
-        especialidad === "" || taller.especialidad === especialidad;
+        especialidad === "" ||
+        taller.especialidad === especialidad;
 
       const coincideUbicacion =
-        ubicacion === "" || taller.ubicacion === ubicacion;
+        ubicacion === "" ||
+        taller.ubicacion === ubicacion;
 
       return (
-        coincideBusqueda && coincideEspecialidad && coincideUbicacion
+        coincideBusqueda &&
+        coincideEspecialidad &&
+        coincideUbicacion
       );
     });
-  }, [talleres, busqueda, especialidad, ubicacion]);
+  }, [
+    talleres,
+    busqueda,
+    especialidad,
+    ubicacion,
+  ]);
 
   const totalPaginas = Math.max(
     1,
     Math.ceil(talleresFiltrados.length / limite)
   );
 
-  const paginaSegura = Math.min(paginaActual, totalPaginas);
-  const indiceInicial = (paginaSegura - 1) * limite;
-  const indiceFinal = indiceInicial + limite;
-  const talleresPaginados = talleresFiltrados.slice(
-    indiceInicial,
-    indiceFinal
+  const paginaSegura = Math.min(
+    paginaActual,
+    totalPaginas
   );
+
+  const indiceInicial =
+    (paginaSegura - 1) * limite;
+
+  const indiceFinal =
+    indiceInicial + limite;
+
+  const talleresPaginados =
+    talleresFiltrados.slice(
+      indiceInicial,
+      indiceFinal
+    );
 
   useEffect(() => {
     if (paginaActual > totalPaginas) {
-      const nuevosParametros = new URLSearchParams(searchParams);
-      nuevosParametros.set("page", String(totalPaginas));
-      nuevosParametros.set("limit", String(limite));
+      const nuevosParametros =
+        new URLSearchParams(searchParams);
+
+      nuevosParametros.set(
+        "page",
+        String(totalPaginas)
+      );
+
+      nuevosParametros.set(
+        "limit",
+        String(limite)
+      );
+
       setSearchParams(nuevosParametros);
     }
   }, [
@@ -218,27 +292,54 @@ function DataPage({ usuarioActivo, onLogout }) {
   ]);
 
   function cambiarPagina(nuevaPagina) {
-    if (nuevaPagina < 1 || nuevaPagina > totalPaginas) {
+    if (
+      nuevaPagina < 1 ||
+      nuevaPagina > totalPaginas
+    ) {
       return;
     }
 
-    const nuevosParametros = new URLSearchParams(searchParams);
-    nuevosParametros.set("page", String(nuevaPagina));
-    nuevosParametros.set("limit", String(limite));
+    const nuevosParametros =
+      new URLSearchParams(searchParams);
+
+    nuevosParametros.set(
+      "page",
+      String(nuevaPagina)
+    );
+
+    nuevosParametros.set(
+      "limit",
+      String(limite)
+    );
+
     setSearchParams(nuevosParametros);
   }
 
   function cambiarLimite(nuevoLimite) {
-    const nuevosParametros = new URLSearchParams(searchParams);
+    const nuevosParametros =
+      new URLSearchParams(searchParams);
+
     nuevosParametros.set("page", "1");
-    nuevosParametros.set("limit", String(nuevoLimite));
+
+    nuevosParametros.set(
+      "limit",
+      String(nuevoLimite)
+    );
+
     setSearchParams(nuevosParametros);
   }
 
   function reiniciarPagina() {
-    const nuevosParametros = new URLSearchParams(searchParams);
+    const nuevosParametros =
+      new URLSearchParams(searchParams);
+
     nuevosParametros.set("page", "1");
-    nuevosParametros.set("limit", String(limite));
+
+    nuevosParametros.set(
+      "limit",
+      String(limite)
+    );
+
     setSearchParams(nuevosParametros);
   }
 
@@ -276,6 +377,7 @@ function DataPage({ usuarioActivo, onLogout }) {
 
   function solicitarEdicion(taller) {
     setNotificacion(null);
+
     setConfirmacion({
       isOpen: true,
       tipo: "editar",
@@ -285,6 +387,7 @@ function DataPage({ usuarioActivo, onLogout }) {
 
   function solicitarEliminacion(taller) {
     setNotificacion(null);
+
     setConfirmacion({
       isOpen: true,
       tipo: "eliminar",
@@ -298,35 +401,58 @@ function DataPage({ usuarioActivo, onLogout }) {
     }
   }
 
-  function confirmarAccion() {
+  async function confirmarAccion() {
     if (!confirmacion.taller) {
       return;
     }
 
     if (confirmacion.tipo === "editar") {
-      setTallerSeleccionado(confirmacion.taller);
+      setTallerSeleccionado(
+        confirmacion.taller
+      );
+
       setErrorFormulario("");
       setConfirmacion(confirmacionInicial);
       setModalFormularioAbierto(true);
+
       return;
     }
 
     if (confirmacion.tipo === "eliminar") {
-      const idTallerEliminado = confirmacion.taller.id;
+      const idTallerEliminado =
+        confirmacion.taller.id;
 
-      setTalleres((talleresActuales) =>
-        talleresActuales.filter(
-          (taller) => String(taller.id) !== String(idTallerEliminado)
-        )
-      );
+      try {
+        setProcesando(true);
+        setNotificacion(null);
 
-      setNotificacion({
-        tipo: "exito",
-        texto:
-          "Taller eliminado temporalmente. Volverá a aparecer al recargar la página.",
-      });
+        // Se realiza una llamada DELETE real.
+        await deleteTaller();
 
-      setConfirmacion(confirmacionInicial);
+        // Después se elimina solamente del estado local.
+        setTalleres((talleresActuales) =>
+          talleresActuales.filter(
+            (taller) =>
+              String(taller.id) !==
+              String(idTallerEliminado)
+          )
+        );
+
+        setNotificacion({
+          tipo: "exito",
+          texto:
+            "Taller eliminado temporalmente. Volverá a aparecer al recargar la página.",
+        });
+
+        setConfirmacion(confirmacionInicial);
+      } catch (errorEliminacion) {
+        setNotificacion({
+          tipo: "error",
+          texto: errorEliminacion.message,
+        });
+      } finally {
+        setProcesando(false);
+      }
     }
   }
 
@@ -337,14 +463,18 @@ function DataPage({ usuarioActivo, onLogout }) {
       setErrorFormulario("");
 
       if (tallerSeleccionado) {
-        const tallerActualizado = await updateTaller(
-          tallerSeleccionado.id,
-          datosFormulario
-        );
+        // Se realiza la llamada PATCH.
+        const tallerActualizado =
+          await updateTaller(
+            tallerSeleccionado.id,
+            datosFormulario
+          );
 
+        // Se modifica únicamente el estado local.
         setTalleres((talleresActuales) =>
           talleresActuales.map((taller) =>
-            String(taller.id) === String(tallerSeleccionado.id)
+            String(taller.id) ===
+            String(tallerSeleccionado.id)
               ? tallerActualizado
               : taller
           )
@@ -352,27 +482,35 @@ function DataPage({ usuarioActivo, onLogout }) {
 
         setNotificacion({
           tipo: "exito",
-          texto: "Taller actualizado correctamente.",
+          texto:
+            "Taller actualizado temporalmente. Los datos originales volverán al recargar la página.",
         });
       } else {
-        const tallerCreado = await createTaller(datosFormulario);
+        // Se realiza la llamada POST.
+        const tallerCreado =
+          await createTaller(datosFormulario);
 
+        // Se agrega únicamente al estado local.
         setTalleres((talleresActuales) => [
           tallerCreado,
           ...talleresActuales,
         ]);
 
         reiniciarPagina();
+
         setNotificacion({
           tipo: "exito",
-          texto: "Taller agregado correctamente.",
+          texto:
+            "Taller agregado temporalmente. Desaparecerá al recargar la página.",
         });
       }
 
       setModalFormularioAbierto(false);
       setTallerSeleccionado(null);
     } catch (errorGuardado) {
-      setErrorFormulario(errorGuardado.message);
+      setErrorFormulario(
+        errorGuardado.message
+      );
     } finally {
       setProcesando(false);
     }
@@ -394,7 +532,10 @@ function DataPage({ usuarioActivo, onLogout }) {
 
   return (
     <div>
-      <Navbar usuarioActivo={usuarioActivo} onLogout={onLogout} />
+      <Navbar
+        usuarioActivo={usuarioActivo}
+        onLogout={onLogout}
+      />
 
       <div className="app-layout">
         <Sidebar
@@ -407,7 +548,9 @@ function DataPage({ usuarioActivo, onLogout }) {
             <PanelResumen
               talleres={talleres}
               artesanos={artesanos}
-              especialidades={resumenEspecialidades}
+              especialidades={
+                resumenEspecialidades
+              }
               cargando={cargando}
               error={error}
             />
@@ -431,7 +574,9 @@ function DataPage({ usuarioActivo, onLogout }) {
                 <button
                   type="button"
                   className="add-button"
-                  onClick={abrirFormularioNuevo}
+                  onClick={
+                    abrirFormularioNuevo
+                  }
                 >
                   + Agregar taller
                 </button>
@@ -440,7 +585,8 @@ function DataPage({ usuarioActivo, onLogout }) {
               {notificacion && (
                 <p
                   className={
-                    notificacion.tipo === "exito"
+                    notificacion.tipo ===
+                    "exito"
                       ? "status-message success-message"
                       : "status-message action-error-message"
                   }
@@ -451,12 +597,20 @@ function DataPage({ usuarioActivo, onLogout }) {
 
               <DataFilters
                 busqueda={busqueda}
-                onCambiarBusqueda={cambiarBusqueda}
+                onCambiarBusqueda={
+                  cambiarBusqueda
+                }
                 especialidad={especialidad}
-                onCambiarEspecialidad={cambiarEspecialidad}
+                onCambiarEspecialidad={
+                  cambiarEspecialidad
+                }
                 ubicacion={ubicacion}
-                onCambiarUbicacion={cambiarUbicacion}
-                especialidades={especialidades}
+                onCambiarUbicacion={
+                  cambiarUbicacion
+                }
+                especialidades={
+                  especialidades
+                }
                 ubicaciones={ubicaciones}
               />
 
@@ -465,23 +619,39 @@ function DataPage({ usuarioActivo, onLogout }) {
               )}
 
               {!cargando && error && (
-                <p className="error-message">{error}</p>
+                <p className="error-message">
+                  {error}
+                </p>
               )}
 
               {!cargando && !error && (
                 <>
                   <DataTable
-                    talleres={talleresPaginados}
-                    onEdit={solicitarEdicion}
-                    onDelete={solicitarEliminacion}
+                    talleres={
+                      talleresPaginados
+                    }
+                    onEdit={
+                      solicitarEdicion
+                    }
+                    onDelete={
+                      solicitarEliminacion
+                    }
                   />
 
                   <Pagination
-                    paginaActual={paginaSegura}
-                    totalPaginas={totalPaginas}
+                    paginaActual={
+                      paginaSegura
+                    }
+                    totalPaginas={
+                      totalPaginas
+                    }
                     limite={limite}
-                    onCambiarPagina={cambiarPagina}
-                    onCambiarLimite={cambiarLimite}
+                    onCambiarPagina={
+                      cambiarPagina
+                    }
+                    onCambiarLimite={
+                      cambiarLimite
+                    }
                   />
                 </>
               )}
@@ -504,11 +674,18 @@ function DataPage({ usuarioActivo, onLogout }) {
 
       <Modal
         isOpen={modalFormularioAbierto}
-        title={tallerSeleccionado ? "Editar taller" : "Agregar taller"}
+        title={
+          tallerSeleccionado
+            ? "Editar taller"
+            : "Agregar taller"
+        }
         onClose={cerrarFormulario}
       >
         <DataForm
-          key={tallerSeleccionado?.id ?? "nuevo"}
+          key={
+            tallerSeleccionado?.id ??
+            "nuevo"
+          }
           taller={tallerSeleccionado}
           onGuardar={guardarTaller}
           onCancelar={cerrarFormulario}
@@ -523,7 +700,10 @@ function DataPage({ usuarioActivo, onLogout }) {
         mensaje={mensajeConfirmacion}
         onConfirm={confirmarAccion}
         onCancel={cancelarConfirmacion}
-        esPeligroso={confirmacion.tipo === "eliminar"}
+        esPeligroso={
+          confirmacion.tipo ===
+          "eliminar"
+        }
         procesando={procesando}
       />
     </div>
