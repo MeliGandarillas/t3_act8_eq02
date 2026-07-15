@@ -30,9 +30,9 @@ function DataTable({ talleres, onEdit, onDelete }) {
               </td>
 
               <td>
-                <span className="table-chip">
+                <strong className="taller-name">
                   {taller.nombreTaller}
-                </span>
+                </strong>
               </td>
 
               <td>{taller.responsable}</td>
