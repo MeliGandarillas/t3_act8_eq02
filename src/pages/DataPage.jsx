@@ -659,8 +659,25 @@ function DataPage({ usuarioActivo, onLogout }) {
           )}
 
           {opcionActiva === "resenas" && (
-            <section>
-              <h1>Reseñas</h1>
+            <section className="coming-soon">
+              <div className="coming-soon-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.3l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9L12 2.5Z"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+
+              <h1 className="coming-soon-title">Reseñas</h1>
+
+              <p className="coming-soon-text">
+                Esta sección estará disponible próximamente.
+              </p>
             </section>
           )}
 
