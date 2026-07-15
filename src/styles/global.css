@@ -19,6 +19,12 @@ body {
   --color-danger: #A93226;
   --color-text: #2E2019;
   --color-border: #E4D5BE;
+
+  --color-olive: #61714D;
+  --color-peach: #EFD7AA;
+  --color-terracotta-dark: #994B46;
+  --color-tan: #F2D6BD;
+  --color-cream: #F5EAD4;
 }
 html,
 body,
