@@ -95,8 +95,8 @@
   justify-content: space-between;
   gap: 20px;
   padding: 18px 20px;
-  border-radius: 12px;
-  background: #f5ead4;
+  border-radius: 16px;
+  background: var(--color-cream);
 }
 
 .specialty-item h3 {
@@ -127,8 +127,8 @@
 .dashboard-empty {
   margin: 0;
   padding: 24px;
-  border-radius: 12px;
-  background: #f5ead4;
+  border-radius: 16px;
+  background: var(--color-cream);
   color: var(--color-brown);
   text-align: center;
 }
@@ -264,7 +264,7 @@
   width: 100%;
   overflow-x: auto;
   border: 1px solid var(--color-border);
-  border-radius: 14px;
+  border-radius: 16px;
   background: var(--color-surface);
 }
 
@@ -275,7 +275,7 @@
 }
 
 .artisans-table thead {
-  background: #efd7aa;
+  background: var(--color-peach);
 }
 
 .artisans-table th,
@@ -300,7 +300,7 @@
 }
 
 .artisan-index {
-  color: #994b46;
+  color: var(--color-terracotta-dark);
   font-weight: 700;
 }
 
@@ -315,8 +315,8 @@
   padding: 0 10px;
   place-items: center;
   border-radius: 999px;
-  background: #61714d;
-  color: #ffffff;
+  background: var(--color-olive);
+  color: var(--color-surface);
   font-weight: 700;
 }
 
@@ -329,8 +329,8 @@
 .artisan-tag {
   display: inline-block;
   padding: 7px 10px;
-  border-radius: 8px;
-  background: #f2d6bd;
+  border-radius: 999px;
+  background: var(--color-tan);
   color: var(--color-text);
   font-size: 13px;
   white-space: nowrap;
