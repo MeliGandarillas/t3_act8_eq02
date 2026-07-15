@@ -682,8 +682,43 @@ function DataPage({ usuarioActivo, onLogout }) {
           )}
 
           {opcionActiva === "ajustes" && (
-            <section>
-              <h1>Ajustes</h1>
+            <section className="settings-page">
+              <div className="dashboard-heading">
+                <h1>Ajustes</h1>
+                <p>Información de la cuenta con la que iniciaste sesión.</p>
+              </div>
+
+              <div className="profile-card">
+                <img
+                  src={usuarioActivo.image}
+                  alt="Foto de perfil"
+                  className="profile-avatar"
+                />
+
+                <h2 className="profile-name">
+                  {usuarioActivo.firstName} {usuarioActivo.lastName}
+                </h2>
+
+                <p className="profile-username">
+                  @{usuarioActivo.username}
+                </p>
+
+                <div className="profile-details">
+                  <div className="profile-detail-item">
+                    <span className="profile-detail-label">Correo</span>
+                    <span className="profile-detail-value">
+                      {usuarioActivo.email}
+                    </span>
+                  </div>
+
+                  <div className="profile-detail-item">
+                    <span className="profile-detail-label">Usuario</span>
+                    <span className="profile-detail-value">
+                      {usuarioActivo.username}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </section>
           )}
         </main>
